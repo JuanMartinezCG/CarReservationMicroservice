@@ -1,6 +1,6 @@
 version: '3'
 services:
-  ### Posgres database for Inventory
+
   db-car-inventory:
     container_name: db-car-inventory
     image: postgres:15-alpine
@@ -15,7 +15,6 @@ services:
       - 5431
     command: -p 5431
 
-  ### postgres database for orders or booking
   db-booking_db:
     container_name: db-booking_db
     image: postgres:15-alpine
@@ -28,7 +27,7 @@ services:
       - 5435:5432
    
 
-  ### Posgres database for payments
+
   db-payments:
     container_name: db-payments
     image: postgres:15-alpine
@@ -43,18 +42,11 @@ services:
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
     container_name: zipkin
-    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     environment:
       - STORAGE_TYPE=mem
-      # Uncomment to enable self-tracing
-      # - SELF_TRACING_ENABLED=true
-      # Uncomment to increase heap size
-      # - JAVA_OPTS=-Xms128m -Xmx128m -XX:+ExitOnOutOfMemoryError
     ports:
-      # Port used for the Zipkin UI and HTTP Api
       - 9411:9411
   
-  ### Posgres database for Keycloak
   db-keycloak:
     container_name: db-keycloak
     image: postgres:15-alpine
@@ -66,8 +58,6 @@ services:
     ports:
       - 5436:5432
    
-
-  ### Keycloak
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:21.0.2
@@ -90,3 +80,12 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HTTP_PORT: 8181
+  
+  ### RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    
