@@ -3,6 +3,7 @@ package com.unimag.booking.services;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -12,7 +13,9 @@ import com.unimag.booking.dto.CreateBookingDto;
 import com.unimag.booking.dto.ResponseBookingDto;
 
 import com.unimag.booking.entities.Booking;
+import com.unimag.booking.event.CustomEvent;
 import com.unimag.booking.exceptions.carInventory.CarReserveException;
+import com.unimag.booking.producers.EventPublisher;
 import com.unimag.booking.repository.BookingRepository;
 
 import jakarta.ws.rs.NotFoundException;
@@ -26,6 +29,9 @@ public class BookingServiceImpl implements BookingService{
     private final BookingRepository bookingRepository;
     private final CarInventoryClient carInventoryClient;
     private final BookingMapperImpl bookingMapper;
+
+    @Autowired
+    private EventPublisher eventPublisher;
     
 
     @Override
@@ -58,9 +64,13 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public ResponseBookingDto confirmedBooking(String bookingId) {
-        // TODO Al hacer el pago la fecha de inicio debe quedar en la fecha actual
-        // TODO Al hacer el pago el estado de la reserva debe quedar en ONGOING
         throw new UnsupportedOperationException("Unimplemented method 'confirmedBooking'");
     }
-    
+
+    public void someMethod() {
+        CustomEvent event = new CustomEvent("Mensaje a enviar");
+        eventPublisher.publishEvent(event);
+    }
+
+
 }
